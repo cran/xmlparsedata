@@ -1,12 +1,12 @@
-14d03cdf7006f49346071c5b0fd54466 *DESCRIPTION
+e66b08a852b0486541b9ca8ccb09ba9e *DESCRIPTION
 ddfa93fe5d0827d872d34b7eef574617 *LICENSE
 b2c9fae9076284c39dd55eac62cd4528 *NAMESPACE
-104b43a7414eeb73afc5f408f76d9163 *NEWS.md
-4651c2ab7619d9e8707742ff1617ed55 *R/package.R
+70336b2482b47820f3ccf00e51cd7c67 *NEWS.md
+4e54a597d85de0cf863aad0a97814538 *R/package.R
 74bfaec363848edc39352fda859d345b *R/utils.R
 0f50537bed2d15c2d88225ba7e047361 *README.md
 2c25fc98993afe35b0212e5585ae99e7 *man/xml_parse_data.Rd
 1b013c2002a44b1241f51106f61b6275 *man/xml_parse_token_map.Rd
 e1f9a3fbf3f296cf70f904bf4b25674d *man/xmlparsedata.Rd
 bb1eefb84eb029c384ec6c50d5e88fc8 *tests/testthat.R
-c2089ce0e565e29818cbd30f097e8702 *tests/testthat/test.R
+59d6c594e4d9add1ed96460fa3f576f2 *tests/testthat/test.R
