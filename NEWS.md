@@ -1,4 +1,11 @@
 
+# 1.0.2
+
+* Remove control characters `\003`, `\007`, `\010`, `\027`, as they are
+  not allowed in XML 1.0, #1 @GregoireGauriot
+
+* Always convert parsed text to UTF-8
+
 # 1.0.1
 
 * Fix a bug when the input is already a `getParseData()` data frame.

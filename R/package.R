@@ -28,7 +28,7 @@ NULL
 #' data frame column names.
 #'
 #' See an example below. See also the README at
-#' \url{https://github.com/MangoTheCat/xmlparsedata#readme}
+#' \url{https://github.com/r-lib/xmlparsedata#readme}
 #' for examples on how to search the XML tree with the \code{xml2} package
 #' and XPath expressions.
 #'
@@ -40,7 +40,7 @@ NULL
 #' @export
 #' @importFrom utils getParseData
 #' @seealso \code{\link{xml_parse_token_map}} for the token names.
-#' \url{https://github.com/MangoTheCat/xmlparsedata#readme} for more
+#' \url{https://github.com/r-lib/xmlparsedata#readme} for more
 #' information and use cases.
 #' @examples
 #' code <- "function(a = 1, b = 2) {\n  a + b\n}\n"
@@ -70,15 +70,24 @@ xml_parse_data <- function(x, includeText = NA, pretty = FALSE) {
   if (!nrow(pd)) return(paste0(xml_header, xml_footer))
 
   pd <- fix_comments(pd)
+  pd$text <-  enc2utf8(pd$text)
 
   ## Tags for all nodes, teminal nodes have end tags as well
   pd$token <- map_token(pd$token)
+
+  ## Positions, to make it easy to compare what comes first
+  maxcol <- max(pd$col1, pd$col2) + 1L
+  pd$start <- pd$line1   * maxcol + pd$col1
+  pd$end   <- pd$line2   * maxcol + pd$col2
+
   pd$tag <- paste0(
     "<", pd$token,
     " line1=\"", pd$line1,
     "\" col1=\"", pd$col1,
     "\" line2=\"", pd$line2,
     "\" col2=\"", pd$col2,
+    "\" start=\"", pd$start,
+    "\" end=\"", pd$end,
     "\">",
     xml_encode(pd$text),
     ifelse(pd$terminal, paste0("</", pd$token, ">"), "")
@@ -159,5 +168,9 @@ xml_encode <- function(x) {
   x <- gsub("&", "&amp;", x, fixed = TRUE)
   x <- gsub("<", "&lt;", x, fixed = TRUE)
   x <- gsub(">", "&gt;", x, fixed = TRUE)
+  x <- gsub("\003", "", x, fixed = TRUE) # Control-C character are not allowed in xml 1.0
+  x <- gsub("\007", "", x, fixed = TRUE) # neither is Bell
+  x <- gsub("\010", "", x, fixed = TRUE) # neither is Backspace
+  x <- gsub("\027", "", x, fixed = TRUE) # neither is Escape
   x
 }
