@@ -54,7 +54,7 @@ NULL
 xml_parse_data <- function(x, includeText = NA, pretty = FALSE) {
 
   xml_header <- paste0(
-    "<?xml version=\"1.0\" encoding=\"UTF-8\"",
+    "<?xml version=\"1.0\" encoding=\"UTF-8\" ",
     "standalone=\"yes\" ?>\n<exprlist>\n"
   )
   xml_footer <- "\n</exprlist>\n"
@@ -70,7 +70,10 @@ xml_parse_data <- function(x, includeText = NA, pretty = FALSE) {
   if (!nrow(pd)) return(paste0(xml_header, xml_footer))
 
   pd <- fix_comments(pd)
-  pd$text <-  enc2utf8(pd$text)
+
+  if (!is.null(pd$text)) {
+    pd$text <- enc2utf8(pd$text)
+  }
 
   ## Tags for all nodes, teminal nodes have end tags as well
   pd$token <- map_token(pd$token)
@@ -89,7 +92,7 @@ xml_parse_data <- function(x, includeText = NA, pretty = FALSE) {
     "\" start=\"", pd$start,
     "\" end=\"", pd$end,
     "\">",
-    xml_encode(pd$text),
+    if (!is.null(pd$text)) xml_encode(pd$text) else "",
     ifelse(pd$terminal, paste0("</", pd$token, ">"), "")
   )
 
@@ -164,7 +167,7 @@ xml_parse_token_map <- c(
   "'}'" = "OP-RIGHT-BRACE",
   "')'" = "OP-RIGHT-PAREN",
   "'!'" = "OP-EXCLAMATION",
-  "']'" = "OP-RIGHT-BRACE",
+  "']'" = "OP-RIGHT-BRACKET",
   "','" = "OP-COMMA"
 )
 
