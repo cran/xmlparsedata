@@ -32,6 +32,10 @@ NULL
 #' for examples on how to search the XML tree with the \code{xml2} package
 #' and XPath expressions.
 #'
+#' Note that `xml_parse_data()` silently drops all control characters
+#' (0x01-0x1f) from the input, except horizontal tab (0x09) and newline
+#' (0x0a), because they are invalid in XML 1.0.
+#'
 #' @param pretty Whether to pretty-indent the XML output. It has a small
 #'   overhead which probably only matters for very large source files.
 #' @inheritParams utils::getParseData
@@ -168,16 +172,15 @@ xml_parse_token_map <- c(
   "')'" = "OP-RIGHT-PAREN",
   "'!'" = "OP-EXCLAMATION",
   "']'" = "OP-RIGHT-BRACKET",
-  "','" = "OP-COMMA"
+  "','" = "OP-COMMA",
+  "'\\\\'" = "OP-LAMBDA"
 )
 
 xml_encode <- function(x) {
   x <- gsub("&", "&amp;", x, fixed = TRUE)
   x <- gsub("<", "&lt;", x, fixed = TRUE)
   x <- gsub(">", "&gt;", x, fixed = TRUE)
-  x <- gsub("\003", "", x, fixed = TRUE) # Control-C character are not allowed in xml 1.0
-  x <- gsub("\007", "", x, fixed = TRUE) # neither is Bell
-  x <- gsub("\010", "", x, fixed = TRUE) # neither is Backspace
-  x <- gsub("\027", "", x, fixed = TRUE) # neither is Escape
+  # most control characters are not allowed in XML, except tab and nl
+  x <- gsub("[\x01-\x08\x0b-\x1f]", "", x, useBytes = TRUE)
   x
 }
